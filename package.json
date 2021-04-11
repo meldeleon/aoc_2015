@@ -1,0 +1,22 @@
+{
+  "name": "aoc_2015",
+  "version": "1.0.0",
+  "description": "Advent of Code 2015",
+  "main": "day1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meldeleon/aoc_2015.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/meldeleon/aoc_2015/issues"
+  },
+  "homepage": "https://github.com/meldeleon/aoc_2015#readme",
+  "dependencies": {
+    "md5": "^2.3.0"
+  }
+}
