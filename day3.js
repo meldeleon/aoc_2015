@@ -2,7 +2,7 @@
 const input = Array.from(
   require("fs").readFileSync("day3_input.txt").toString()
 )
-console.log(input)
+debugger
 
 let santa = [0, 0]
 
@@ -28,6 +28,3 @@ let stringHouseArray = houseArray.map((house) => {
 })
 
 let uniqueHouseArray = new Set(stringHouseArray)
-console.log(uniqueHouseArray)
-
-console.log(uniqueHouseArray.size)
