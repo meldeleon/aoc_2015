@@ -1,4 +1,40 @@
-//bitwise AND
+const { match } = require("assert")
+
+const input = require("fs")
+  .readFileSync("day7_input.txt")
+  .toString()
+  .split("\r\n")
+
+let queue = [...input]
+let board = {}
+
+/*number  -> wire
+wire OPERATOR wire -> wire
+wire OPERATOR number -> wire
+NOT wire -> NOT
+*/
+
+
+function parseCommand(command) {
+  let cmdArray = command.split(" ")
+  if (cmdArray[0] === not) {
+    //complement
+  } else if (cmdArray[1] === "->") {
+    // basic assignment
+  } else {
+    if ()
+  }
+}
+
+// let basicAssignments = input.filter((x) => x.match(/(^\d* ->)/g))
+// basicAssignments.forEach((x) => {
+//   board[x.match(/.$/g).toString()] = intTo16Bit(x.match(/.$/g))
+// })
+// console.log(board)
+// // iterate over the known wires, and find assignments that use only a known value.
+// Object.entries(board).forEach((x) => {})
+
+
 
 function bitwiseAnd(arr1, arr2) {
   let y = arr2[index]
@@ -7,7 +43,6 @@ function bitwiseAnd(arr1, arr2) {
   })
 }
 
-//bitwise OR
 function bitwiseOr(arr1, arr2) {
   return arr1.map((x, index) => {
     let y = arr2[index]
@@ -19,7 +54,6 @@ function bitwiseOr(arr1, arr2) {
   })
 }
 
-//rshift
 function bitwiseRShift(arr, shiftNumber) {
   let shiftedArr = [...arr]
   for (let i = 0; i < shiftNumber; i++) {
@@ -29,7 +63,6 @@ function bitwiseRShift(arr, shiftNumber) {
   return shiftedArr
 }
 
-//lshift
 function bitwiseLShift(arr, shiftNumber) {
   let shiftedArr = [...arr]
   for (let i = 0; i < shiftNumber; i++) {
@@ -39,14 +72,11 @@ function bitwiseLShift(arr, shiftNumber) {
   return shiftedArr
 }
 
-//complement (NOT)
 function bitwiseComplement(arr) {
   return arr.map((x) => {
     return 1 - x
   })
 }
-let test = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0]
-console.log(bitwiseComplement(test))
 
 function intTo16Bit(int) {
   let bitArray = []
@@ -59,4 +89,5 @@ function intTo16Bit(int) {
     }
     int = int % power
   }
+  return bitArray
 }
