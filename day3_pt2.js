@@ -9,7 +9,9 @@ let santaBot = [0, 0]
 let houseArray = input.map((direction, index) => {
   let [x, y] = santa
   let [a, b] = santaBot
+  //I would turn this into two functions, one for even numbers, one for odd numbers
   if (index % 2 === 0) {
+    //you can return each if and avoid the "else if"
     if (direction === "^") {
       santa = [x, y + 1]
     } else if (direction === ">") {

@@ -6,7 +6,7 @@ debugger
 
 let santa = [0, 0]
 
-let houseArray = input.map((direction) => {
+let houseArray = input.map((direction) => { //yay! this variable name
   let [x, y] = santa
   if (direction === "^") {
     santa = [x, y + 1]

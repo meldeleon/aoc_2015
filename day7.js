@@ -31,6 +31,7 @@ function parseCommand(command) {
   let [instruction, destinationWire] = command.split(" -> ")
   instructionArray = instruction.split(" ")
   //console.log(instructionArray, destinationWire)
+  //try to use guards, or break these into functions that you call and have if logic inside.
   if (instructionArray[0] === "NOT") {
     if (board[instructionArray[1]]) {
       board[destinationWire] = bitwiseComplement(board[instructionArray[1]])
@@ -75,7 +76,7 @@ function parseCommand(command) {
   }
 }
 
-function bitwiseAnd(arr1, arr2) {
+function bitwiseAnd(arr1, arr2) { //arr1, arr2, the variable names should say something about what each is, everything is an 'array'
   return arr1.map((x, index) => {
     let y = arr2[index]
     return x * y
@@ -93,7 +94,7 @@ function bitwiseOr(arr1, arr2) {
   })
 }
 
-function bitwiseRShift(arr, shiftNumber) {
+function bitwiseRShift(arr, shiftNumber) { //I like shiftNumber more than arr for example
   shiftNumber = parseInt(shiftNumber)
   let shiftedArr = [...arr]
   for (let i = 0; i < shiftNumber; i++) {
@@ -119,10 +120,10 @@ function bitwiseComplement(arr) {
   })
 }
 
-function intTo16Bit(int) {
+function intTo16Bit(int) { //int is a taken word in javascript/most programming languages
   let bitArray = []
-  for (i = 0; i < 16; i++) {
-    let power = 2 ** (15 - i)
+  for (i = 0; i < 16; i++) { //i is somewhat used in for loops...
+    let power = 2 ** (15 - i) //why is this called power?
     if (int / power >= 1) {
       bitArray[i] = 1
     } else {

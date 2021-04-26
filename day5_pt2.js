@@ -14,7 +14,7 @@ input.forEach((str) => {
 console.log(count)
 
 //ch3ck f0r r3p34t1ng p41r
-function checkRepeatingPair(str) {
+function checkRepeatingPair(str) { //not wild about this variable name. I would name what it is, like "pair"
   let strArray = Array.from(str)
   let pairArray = strArray.map((x, index) => {
     if (index < strArray.length - 1) {
