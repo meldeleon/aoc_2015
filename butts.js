@@ -1,15 +1,15 @@
-let butts = [ '""', '"abc"', '"aaa\\"aaa"', '"\\x27"' ]
-
-butts.forEach(str => {
-    escape(str)
+const input = require("fs")
+  .readFileSync("day08_input.txt")
+  .toString()
+  .split("\r\n")
+console.log(input)
+const butts = []
+input.forEach((str) => {
+  butts.push(escape(str))
 })
 
-let test = '""'
-
-console.log(escape(test))
-
 function escape(str) {
-    str = str.replace("\\", "\\\\")
-    str = str.replace('"', '\\"')
-    return str
+  let newStr = str.replace(/"/g, '9"').toString()
+  return newStr
 }
+console.log(butts)

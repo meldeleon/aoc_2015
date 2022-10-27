@@ -1,50 +1,26 @@
 const input = require("fs")
   .readFileSync("day08_input.txt")
   .toString()
-  .split("\n")
-console.log(input)
+  .split("\r\n")
 
 const state = {
-    literalCharCount: 0,
-    stringCharCount: 0,
+  literalCharCount: 0,
+  stringCharCount: 0,
 }
 
-input.forEach(str => {
-    escape(str)
-    state.literalCharCount += literalCount(str)
-    state.stringCharCount += strCount(str)
+input.forEach((str) => {
+  let newStr = escape(str)
+  state.literalCharCount += literalCount(newStr) + 2
+  state.stringCharCount += literalCount(str)
 })
-function literalCount (str) {
-    return str.length
-}
-
-function strCount(str) {
-    let count = 0
-    for (let i = 0; i < str.length; i ++) {
-        if (str[i] === "\\") {
-            count ++
-            let nextChar = str[i+1]
-            if (nextChar === "\\"){
-                i++
-            } else if (nextChar === "x") {
-                i+=3
-            }
-        }
-        else if (str[i] === '"') {
-            //do nothing
-        } else {
-            count++
-        }
-    }
-    
-    return count
+function literalCount(str) {
+  return str.length
 }
 
 function escape(str) {
-    str.replace("\\", "\\\\")
-    str.replace('"', '\"')
+  let newStr = str.replace(/"/g, '9"').replace(/\\/g, "9\\")
+  return newStr
 }
-
-console.log({state})
+console.log({ state })
 
 console.log(`The answer is ${state.literalCharCount - state.stringCharCount}`)
