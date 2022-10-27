@@ -1,5 +1,3 @@
-const { match } = require("assert")
-
 const input = require("fs")
   .readFileSync("day7_input.txt")
   .toString()
