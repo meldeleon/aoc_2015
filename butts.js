@@ -1,2 +1,4 @@
-let a = 123
-console.log(~a)
+let input = "br AND bt -> bu"
+let [left, right] = input.split(" -> ")
+
+console.log({ left }, { right })
