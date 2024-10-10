@@ -10,7 +10,7 @@ const input = require("fs")
   .toString()
   .split("\r\n")
 
-const board = new Set()
+const board = new Object()
 runOperations(input)
 console.log(board)
 console.log(`The answer is ${board.a}`)
@@ -24,11 +24,9 @@ function runOperations(input) {
   while (possibleOperations < operationsLength || n === 1000) {
     input.forEach((line) => {
       let [left, right] = line.split(" -> ")
-      console.log(`right before ${right}`)
       let operation = left.split(" ")
       let operationType = findOperationType(operation)
       if (isOperationValid(operation, operationType)) {
-        console.log(`right after ${right}`)
         possibleOperations++
         if (operationType === "VALUE") {
           //assign value to a wire on theboard
@@ -102,10 +100,7 @@ function checkIfInt(str) {
 }
 
 function isOperationValid(operation, operationType) {
-  //console.log({ operation }, { operationType })
-  //we should only execute and operation if we know the values of all of the wires on the lefthand side of the operation
-  //we are asumming that operation is an array of the lefthand of the assignment
-  //operation types:
+  console.log({ operation })
   switch (operationType) {
     case "VALUE":
       return true

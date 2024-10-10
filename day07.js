@@ -1,142 +1,126 @@
+//define target wire here
+const target = "f"
+
+//parsing input
 const input = require("fs")
-  .readFileSync("day7_input.txt")
+  .readFileSync("day07_input.txt")
   .toString()
   .split("\r\n")
+console.log(input)
 
-let queue = [...input]
-let board = {}
+console.log(recurseToFindWire(target, input))
 
-runOperations(queue)
-Object.keys(board).forEach((x) => {
-  board[x] = bitToInt(board[x])
-})
-console.log(board)
-console.log(board[a])
-
-function runOperations(instructions) {
-  while (queue.length > 0) {
-    queue.forEach((x, index) => {
-      if (parseCommand(x) === null) {
-        return
-      } else {
-        parseCommand(x)
-        queue.splice(index, 1)
-      }
-    })
-  }
-}
-function parseCommand(command) {
-  let [instruction, destinationWire] = command.split(" -> ")
-  instructionArray = instruction.split(" ")
-  //console.log(instructionArray, destinationWire)
-  if (instructionArray[0] === "NOT") {
-    if (board[instructionArray[1]]) {
-      board[destinationWire] = bitwiseComplement(board[instructionArray[1]])
-    } else {
-      // if left-hand wires not defined, punt
-      return null
-    }
-  } else if (instructionArray.length === 1) {
-    board[destinationWire] = intTo16Bit(instructionArray[0])
+function recurseToFindWire(wire) {
+  // find the definition of the wire
+  let operation = findWireDefintion(wire).split(" ")
+  let operationType = findOperationType(operation)
+  // if the definition is just a value, return it
+  if (operationType === "VALUE") {
+    return parseInt(operation[0])
+  } else if (operationType === "WIRE") {
+    return recurseToFindWire(operation)
+  } else if (operationType === "NOT") {
+    return performBitwiseOperation(
+      operationType,
+      recurseToFindWire(operation[1])
+    )
   } else {
-    let [operand1, operator, operand2] = instructionArray
-    switch (operator) {
-      case "OR":
-        if (board[operand1] && board[operand2]) {
-          board[destinationWire] = bitwiseOr(board[operand1], board[operand2])
-        } else {
-          return null
-        }
-        break
-      case "AND":
-        if (board[operand1] && board[operand2]) {
-          board[destinationWire] = bitwiseAnd(board[operand1], board[operand2])
-        } else {
-          return null
-        }
-        break
-      case "LSHIFT":
-        if (board[operand1]) {
-          board[destinationWire] = bitwiseLShift(board[operand1], operand2)
-        } else {
-          return null
-        }
-        break
-      case "RSHIFT":
-        if (board[operand1]) {
-          board[destinationWire] = bitwiseRShift(board[operand1], operand2)
-        } else {
-          return null
-        }
-        break
-    }
+    performBitwiseOperation(
+      operationType,
+      recurseToFindWire(operation[0]),
+      recurseToFindWire(operation[2])
+    )
   }
 }
 
-function bitwiseAnd(arr1, arr2) {
-  return arr1.map((x, index) => {
-    let y = arr2[index]
-    return x * y
+function findWireDefintion(wire, input) {
+  let filteredList = input.filter((line) => {
+    let [_left, right] = line.split(" -> ")
+    return right === wire
   })
+  let [definition, _wire] = filteredList[0].split(" -> ")
+  return definition
 }
 
-function bitwiseOr(arr1, arr2) {
-  return arr1.map((x, index) => {
-    let y = arr2[index]
-    if (x === 1 || y === 1) {
-      return 1
+function findOperationType(operation) {
+  let numberOfArgs = operation.length
+  if (numberOfArgs === 1) {
+    if (parseInt(operation[0])) {
+      return "VALUE"
     } else {
-      return 0
+      return "WIRE"
     }
-  })
-}
-
-function bitwiseRShift(arr, shiftNumber) {
-  shiftNumber = parseInt(shiftNumber)
-  let shiftedArr = [...arr]
-  for (let i = 0; i < shiftNumber; i++) {
-    shiftedArr.unshift(0)
-    shiftedArr.pop()
-  }
-  return shiftedArr
-}
-
-function bitwiseLShift(arr, shiftNumber) {
-  shiftNumber = parseInt(shiftNumber)
-  let shiftedArr = [...arr]
-  for (let i = 0; i < shiftNumber; i++) {
-    shiftedArr.shift()
-    shiftedArr.push(0)
-  }
-  return shiftedArr
-}
-
-function bitwiseComplement(arr) {
-  return arr.map((x) => {
-    return 1 - x
-  })
-}
-
-function intTo16Bit(int) {
-  let bitArray = []
-  for (i = 0; i < 16; i++) {
-    let power = 2 ** (15 - i)
-    if (int / power >= 1) {
-      bitArray[i] = 1
+  } else {
+    if (operation[0] === "NOT") {
+      return operation[0]
     } else {
-      bitArray[i] = 0
+      return operation[1]
     }
-    int = int % power
   }
-  return bitArray
+}
+function performBitwiseOperation(operator, a, b) {
+  let aVal
+  let bVal
+  if (checkIfInt(a)) {
+    aVal = a
+  } else {
+    aVal = board[a]
+  }
+  if (checkIfInt(b)) {
+    bVal = b
+  } else {
+    bVal = board[b]
+  }
+  //console.log({ aVal }, { bVal })
+  //returns bitwise operation result
+  switch (operator) {
+    case "AND":
+      return aVal & bVal & 0xffff
+    case "OR":
+      return (aVal & 0xffff) | (bVal & 0xffff)
+    case "LSHIFT":
+      return (aVal << bVal) & 0xffff
+    case "RSHIFT":
+      return (aVal >> bVal) & 0xffff
+    case "NOT":
+      return ~aVal & 0xffff
+  }
 }
 
-function bitToInt(arr) {
-  let int = 0
-  arr.forEach((x, index) => {
-    if (x === 1) {
-      int += 2 ** (15 - index)
-    }
-  })
-  return int
+function checkIfInt(str) {
+  return parseInt(str)
 }
+
+// function isOperationValid(operation, operationType) {
+//   console.log({ operation })
+//   switch (operationType) {
+//     case "VALUE":
+//       return true
+//     case "NOT":
+//       if (checkIfInt(operation[1]) || board[operation[1]]) {
+//         return true
+//       } else {
+//         return false
+//       }
+//     case "WIRE":
+//     case "LSHIFT":
+//     case "RSHIFT":
+//       if (board[operation[0]]) {
+//         return true
+//       } else {
+//         return false
+//       }
+//     case "AND":
+//     case "OR":
+//       if (
+//         (checkIfInt(operation[0]) || board[operation[0]]) &&
+//         (checkIfInt(operation[2]) || board[operation[2]])
+//       ) {
+//         return true
+//       } else {
+//         return false
+//       }
+//     default:
+//       console.log("Unknown operation type")
+//   }
+// }
