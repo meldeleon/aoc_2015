@@ -1,5 +1,3 @@
-const { start } = require("repl")
-
 const input = require("fs")
   .readFileSync("day09_input.txt")
   .toString()

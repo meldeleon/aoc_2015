@@ -10,25 +10,27 @@ console.log(input)
 
 console.log(recurseToFindWire(target, input))
 
-function recurseToFindWire(wire) {
+function recurseToFindWire(wire, input) {
   // find the definition of the wire
-  let operation = findWireDefintion(wire).split(" ")
+  let operation = findWireDefintion(wire, input).split(" ")
   let operationType = findOperationType(operation)
   // if the definition is just a value, return it
   if (operationType === "VALUE") {
-    return parseInt(operation[0])
+    let wireValue = parseInt(operation[0])
+    return wireValue
   } else if (operationType === "WIRE") {
-    return recurseToFindWire(operation)
+    return recurseToFindWire(operation, input)
   } else if (operationType === "NOT") {
     return performBitwiseOperation(
       operationType,
-      recurseToFindWire(operation[1])
+      recurseToFindWire(operation[1], input)
     )
   } else {
+    console.log(`performing bitwise operation:${operationType}`)
     performBitwiseOperation(
       operationType,
-      recurseToFindWire(operation[0]),
-      recurseToFindWire(operation[2])
+      recurseToFindWire(operation[0], input),
+      recurseToFindWire(operation[2], input)
     )
   }
 }
@@ -39,6 +41,7 @@ function findWireDefintion(wire, input) {
     return right === wire
   })
   let [definition, _wire] = filteredList[0].split(" -> ")
+  console.log({ definition }, { wire })
   return definition
 }
 
@@ -90,37 +93,3 @@ function performBitwiseOperation(operator, a, b) {
 function checkIfInt(str) {
   return parseInt(str)
 }
-
-// function isOperationValid(operation, operationType) {
-//   console.log({ operation })
-//   switch (operationType) {
-//     case "VALUE":
-//       return true
-//     case "NOT":
-//       if (checkIfInt(operation[1]) || board[operation[1]]) {
-//         return true
-//       } else {
-//         return false
-//       }
-//     case "WIRE":
-//     case "LSHIFT":
-//     case "RSHIFT":
-//       if (board[operation[0]]) {
-//         return true
-//       } else {
-//         return false
-//       }
-//     case "AND":
-//     case "OR":
-//       if (
-//         (checkIfInt(operation[0]) || board[operation[0]]) &&
-//         (checkIfInt(operation[2]) || board[operation[2]])
-//       ) {
-//         return true
-//       } else {
-//         return false
-//       }
-//     default:
-//       console.log("Unknown operation type")
-//   }
-// }
