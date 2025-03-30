@@ -50,17 +50,17 @@ function findPermutations(cities_list) {
   return result
 }
 const all_routes = findPermutations(unique_cities)
-var min_distance = 1000000
+var max_distance = 0
 const all_routes_with_distance = all_routes.map((route) => {
   let distance = 0
   for (let i = 0; i < route.length - 1; i++) {
     distance += parseInt(findDistance(route[i], route[i + 1]))
   }
-  if (distance < min_distance) min_distance = distance
+  if (distance > max_distance) max_distance = distance
   return {
     route: route,
     distance: distance,
   }
 })
 
-console.log(`The answer is: ${min_distance}`)
+console.log(`The answer is: ${max_distance}`)
