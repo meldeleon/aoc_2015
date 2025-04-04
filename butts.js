@@ -1,7 +1,3 @@
-let butts = ["Belfast", "London"]
-
-if (butts.includes("butts") && butts.includes("Dublin")) {
-  console.log("butts1")
-} else {
-  console.log("butts2")
+for (let i = 0; i < 10; i++) {
+  console.log(`I have ${i} cats`)
 }
