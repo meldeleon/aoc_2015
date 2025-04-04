@@ -1,3 +1,3 @@
-for (let i = 0; i < 10; i++) {
-  console.log(`I have ${i} cats`)
-}
+const alpha = "abcdefghijklmnopqrstuvwxy"
+
+console.log(alpha.indexOf("z"))
