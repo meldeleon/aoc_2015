@@ -1,38 +1,64 @@
-const input = "vzbxkghb"
+const input = "abcdefgh"
 const alpha = "abcdefghijklmnopqrstuvwxyz"
+
+console.log(findValidPassword(input))
+
+function findValidPassword(password) {
+  let unverified = true
+  let stop = 0
+  while (unverified) {
+    password = iteratePassword(password)
+    let check = validatePassword(password)
+    console.log({ password }, {})
+    if (check) {
+      unverified = false
+      return password
+    }
+    stop++
+
+    if (stop > 100) {
+      console.log({ stop })
+      unverified = false
+    }
+  }
+}
 
 function iteratePassword(input) {
   const last_index = input.length - 1
   const output_arr = []
-  let increment_next = false
+  let wraparound = false
+  // start with rightmost letter of pw
   for (let i = last_index; i >= 0; i--) {
+    //find what number letter in the alphabet the current letter is on
     let alphaIndex = alpha.indexOf(input[i])
-    //check if this letter will carry over
+
+    //check if this letter will carry over on increment
     if (alphaIndex > 24) {
-      increment_next = true
+      wraparound = true
     }
-    // if its the last letter of pw, or previous letter carried over increment
-    if (i === last_index || increment_next) {
+    // if its the last letter of pw, or the previous letter carried over increment the letter
+    if (i === last_index) {
       output_arr.unshift(alpha[(alphaIndex + 1) % 26])
+    } else if (wraparound) {
+      output_arr.unshift(alpha[(alphaIndex + 1) % 26])
+      wraparound = false
     }
-    // otherwise, unshift as it
+    // otherwise, unshift as is
     else {
       output_arr.unshift(input[i])
-      increment_next = false
+      wraparound = false
     }
   }
   return output_arr.join("")
 }
 
 function validatePassword(password) {
-  return (
-    increasingStraight(password) &&
-    excludeLetters(password) &&
-    twoOverlapping(password)
-  )
+  let checkStraight = increasingStraight(password)
+  let checkForExcludes = excludeLetters(password)
+  let checkForOverlaps = twoOverlapping(password)
+  //console.log({ checkStraight }, { checkForExcludes }, { checkForOverlaps })
+  return checkStraight && checkForExcludes && checkForOverlaps
 }
-
-console.log(validatePassword("abcdffaa"))
 
 //expects a string of
 function increasingStraight(password) {
@@ -50,7 +76,6 @@ function increasingStraight(password) {
 function excludeLetters(password) {
   let count =
     password.indexOf("o") + password.indexOf("i") + password.indexOf("l")
-  console.log(count)
   return count <= -3
 }
 
