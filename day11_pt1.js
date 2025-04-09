@@ -89,3 +89,24 @@ function twoOverlapping(password) {
   }
   return count >= 2
 }
+
+function skipForbidden(password, forbidden_index) {
+  let reset_string = ""
+  for (let i = 0; i < 8 - forbidden_index; i++) {
+    reset_string = reset_string.concat("a")
+  }
+  let next_password = password.slice(0, forbidden_index).concat(reset_string)
+  return next_password
+}
+
+function returnForbiddenIndex(password) {
+  const forbidden_letters = ["o", "i", "l"]
+  for (let i = 0; i < password.length; i++) {
+    for (let j = 0; j < forbidden_letters.length; j++) {
+      if (password[i] === forbidden_letters[j]) {
+        return i
+      }
+    }
+  }
+  return -1
+}

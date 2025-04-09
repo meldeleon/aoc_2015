@@ -1,42 +1,54 @@
-var input = "abcdffaa"
-const alpha = "abcdefghijklmnopqrstuvwxyz"
+const input = "ghijklmn"
+let butt_index = returnForbiddenIndex(input)
+console.log(skipForbidden(input, butt_index))
 
-console.log(validatePassword(input))
+function iteratePassword(input) {
+  const last_index = input.length - 1
+  const output_arr = []
 
-function validatePassword(password) {
-  let checkStraight = increasingStraight(password)
-  let checkForExcludes = excludeLetters(password)
-  let checkForOverlaps = twoOverlapping(password)
-  console.log({ checkStraight }, { checkForExcludes }, { checkForOverlaps })
-  return checkStraight && checkForExcludes && checkForOverlaps
-}
+  let wraparound = false
+  // start with rightmost letter of pw
+  for (let i = last_index; i >= 0; i--) {
+    //find what number letter in the alphabet the current letter is on
+    let alphaIndex = alpha.indexOf(input[i])
 
-//expects a string of
-function increasingStraight(password) {
-  for (let i = 0; i < password.length - 2; i++) {
-    let index1 = alpha.indexOf(password[i])
-    let index2 = alpha.indexOf(password[i + 1])
-    let index3 = alpha.indexOf(password[i + 2])
-    if (index2 === index1 + 1 && index3 === index2 + 1) {
-      return true
+    //check if this letter will carry over on increment
+    if (alphaIndex > 24) {
+      wraparound = true
+    }
+    // if its the last letter of pw, or the previous letter carried over increment the letter
+    if (i === last_index) {
+      output_arr.unshift(alpha[(alphaIndex + 1) % 26])
+    } else if (wraparound) {
+      output_arr.unshift(alpha[(alphaIndex + 1) % 26])
+      wraparound = false
+    }
+    // otherwise, unshift as is
+    else {
+      output_arr.unshift(input[i])
+      wraparound = false
     }
   }
-  return false
+  return output_arr.join("")
 }
 
-function excludeLetters(password) {
-  let count =
-    password.indexOf("o") + password.indexOf("i") + password.indexOf("l")
-  return count <= -3
+function skipForbidden(password, forbidden_index) {
+  let reset_string = ""
+  for (let i = 0; i < 8 - forbidden_index; i++) {
+    reset_string = reset_string.concat("a")
+  }
+  let next_password = password.slice(0, forbidden_index).concat(reset_string)
+  return next_password
 }
 
-function twoOverlapping(password) {
-  let count = 0
-  for (let i = 0; i < password.length - 1; i++) {
-    if (password[i] === password[i + 1]) {
-      count++
-      i++
+function returnForbiddenIndex(password) {
+  const forbidden_letters = ["o", "i", "l"]
+  for (let i = 0; i < password.length; i++) {
+    for (let j = 0; j < forbidden_letters.length; j++) {
+      if (password[i] === forbidden_letters[j]) {
+        return i
+      }
     }
   }
-  return count >= 2
+  return -1
 }
