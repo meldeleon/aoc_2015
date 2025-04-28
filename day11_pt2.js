@@ -1,4 +1,4 @@
-const input = "vzbxxyzz"
+const input = "vzcaabcc"
 const alpha = "abcdefghijklmnopqrstuvwxyz"
 const forbidden = new Set(["i", "o", "l"])
 
