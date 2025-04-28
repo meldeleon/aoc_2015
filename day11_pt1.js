@@ -1,112 +1,53 @@
-const input = "abcdefgh"
+const input = "vzbxxzaa"
 const alpha = "abcdefghijklmnopqrstuvwxyz"
+const forbidden = new Set(["i", "o", "l"])
 
-console.log(findValidPassword(input))
-
-function findValidPassword(password) {
-  let unverified = true
-  let stop = 0
-  while (unverified) {
-    password = iteratePassword(password)
-    let check = validatePassword(password)
-    console.log({ password }, {})
-    if (check) {
-      unverified = false
-      return password
-    }
-    stop++
-
-    if (stop > 100) {
-      console.log({ stop })
-      unverified = false
-    }
+function incrementPassword(password) {
+  const chars = password.split("")
+  let i = chars.length - 1
+  while (i >= 0) {
+    let alphaIndex = alpha.indexOf(chars[i])
+    alphaIndex = (alphaIndex + 1) % 26
+    chars[i] = alpha[alphaIndex]
+    if (alphaIndex !== 0) break
+    i--
   }
+  return chars.join("")
 }
-
-function iteratePassword(input) {
-  const last_index = input.length - 1
-  const output_arr = []
-  let wraparound = false
-  // start with rightmost letter of pw
-  for (let i = last_index; i >= 0; i--) {
-    //find what number letter in the alphabet the current letter is on
-    let alphaIndex = alpha.indexOf(input[i])
-
-    //check if this letter will carry over on increment
-    if (alphaIndex > 24) {
-      wraparound = true
-    }
-    // if its the last letter of pw, or the previous letter carried over increment the letter
-    if (i === last_index) {
-      output_arr.unshift(alpha[(alphaIndex + 1) % 26])
-    } else if (wraparound) {
-      output_arr.unshift(alpha[(alphaIndex + 1) % 26])
-      wraparound = false
-    }
-    // otherwise, unshift as is
-    else {
-      output_arr.unshift(input[i])
-      wraparound = false
-    }
-  }
-  return output_arr.join("")
-}
-
-function validatePassword(password) {
-  let checkStraight = increasingStraight(password)
-  let checkForExcludes = excludeLetters(password)
-  let checkForOverlaps = twoOverlapping(password)
-  //console.log({ checkStraight }, { checkForExcludes }, { checkForOverlaps })
-  return checkStraight && checkForExcludes && checkForOverlaps
-}
-
-//expects a string of
-function increasingStraight(password) {
+function hasStraight(password) {
   for (let i = 0; i < password.length - 2; i++) {
-    let index1 = alpha.indexOf(password[i])
-    let index2 = alpha.indexOf(password[i + 1])
-    let index3 = alpha.indexOf(password[i + 2])
-    if (index2 === index1 + 1 && index3 === index2 + 1) {
-      return true
-    }
+    const a = password.charCodeAt(i)
+    const b = password.charCodeAt(i + 1)
+    const c = password.charCodeAt(i + 2)
+    if (b === a + 1 && c === b + 1) return true
   }
   return false
 }
 
-function excludeLetters(password) {
-  let count =
-    password.indexOf("o") + password.indexOf("i") + password.indexOf("l")
-  return count <= -3
+function hasForbidden(password) {
+  return [...password].some((char) => forbidden.has(char))
 }
 
-function twoOverlapping(password) {
-  let count = 0
+function hasTwoPairs(password) {
+  let pairs = new Set()
   for (let i = 0; i < password.length - 1; i++) {
     if (password[i] === password[i + 1]) {
-      count++
-      i++
+      pairs.add(password[i])
+      i++ // skip next to prevent overlapping
     }
   }
-  return count >= 2
+  return pairs.size >= 2
 }
 
-function skipForbidden(password, forbidden_index) {
-  let reset_string = ""
-  for (let i = 0; i < 8 - forbidden_index; i++) {
-    reset_string = reset_string.concat("a")
-  }
-  let next_password = password.slice(0, forbidden_index).concat(reset_string)
-  return next_password
-}
-
-function returnForbiddenIndex(password) {
-  const forbidden_letters = ["o", "i", "l"]
-  for (let i = 0; i < password.length; i++) {
-    for (let j = 0; j < forbidden_letters.length; j++) {
-      if (password[i] === forbidden_letters[j]) {
-        return i
-      }
+function findNextValidPassword(password) {
+  let next = incrementPassword(password)
+  while (true) {
+    if (!hasForbidden(next) && hasStraight(next) && hasTwoPairs(next)) {
+      return next
     }
+    next = incrementPassword(next)
   }
-  return -1
 }
+
+const nextValidPassword = findNextValidPassword(input)
+console.log(nextValidPassword)
