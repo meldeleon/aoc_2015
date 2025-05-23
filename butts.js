@@ -1,10 +1,13 @@
-function detectNumberChar(character) {
-  let parsed = parseInt(character)
-  return parsed === parsed || character === "-"
+const a = [1, 2, 3]
+const b = {
+  a: 1,
+  b: 2,
+}
+function butts(input) {
+  for (item of Object.entries(input)) {
+    console.log(item)
+  }
 }
 
-console.log(detectNumberChar("1"))
-console.log(detectNumberChar("one"))
-console.log(detectNumberChar("true"))
-console.log(detectNumberChar("-"))
-console.log(detectNumberChar("+"))
+console.log(typeof "butts" === "string")
+console.log(typeof 2)
