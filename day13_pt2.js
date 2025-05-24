@@ -1,8 +1,9 @@
 const input = require("fs")
-  .readFileSync("day13_input.txt")
+  .readFileSync("day13_pt_2_input.txt")
   .toString()
   .split("\r\n")
 
+//MAIN
 const seatingMap = new Object()
 input.forEach((line) => {
   addValuesToSeatMap(line)
@@ -18,6 +19,7 @@ for (let i = 0; i < allPermutations.length; i++) {
 console.log({ maxHappiness })
 
 //helper functions
+
 function addValuesToSeatMap(line) {
   // split the line, assign vars to important bits
   let lineArr = line.split(" ")
