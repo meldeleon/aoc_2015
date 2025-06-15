@@ -1,2 +1,3 @@
-const a = ["Alice", "Bob", "Carol", "David"]
-console.log(a[-1])
+const butts = [1, 2, 3, "1", "two"]
+//js is stupid
+console.log(!butts.every(val => parseInt(val) == val))
