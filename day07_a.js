@@ -44,7 +44,7 @@ data.forEach(line => {
 
 })
 
-// console.log(mappings)
+console.log(mappings)
 let solution = findWireValue(targetWire)
 console.log(`The answer is ${solution}`)
 
